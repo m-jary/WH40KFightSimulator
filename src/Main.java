@@ -16,18 +16,18 @@ public class Main {
         // Get variables from input
         String dNumber = split1[0];
         String dType = split2[0];
-        String dAdd = split2[1];
+        String dModifier = split2[1];
 
         // String to int conversion
         int diceNumber = Integer.parseInt(dNumber);
         int diceType = Integer.parseInt(dType);
-        int diceAdd = Integer.parseInt(dAdd);
+        int diceModifier = Integer.parseInt(dModifier);
 
         // Print confirmation
-        System.out.println("You are rolling " + diceNumber + " d" + diceType + " dice and adding " + diceAdd + " to the result.");
+        System.out.println("You are rolling " + diceNumber + " d" + diceType + " dice with a modifier of: " + diceModifier);
 
-        DiceRoller rollThemDice = new DiceRoller(diceNumber, diceType, diceAdd);
-        ArrayList<Integer> results = rollThemDice.rolls();
+        DiceRoller rollThemDice = new DiceRoller(diceNumber, diceType, diceModifier);
+        ArrayList<Integer> results = rollThemDice.roll();
         // Print dice rolls
         System.out.println("Here's what you rolled: " + results);
 

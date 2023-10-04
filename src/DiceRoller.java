@@ -12,16 +12,16 @@ public class DiceRoller {
     }
 
     // Generate random rolls
-    public ArrayList<Integer> rolls() {
-        ArrayList<Integer> results = new ArrayList<>();
+    public ArrayList<Integer> roll() {
+        ArrayList<Integer> hitResults = new ArrayList<>();
         int randomRoll;
         int min = 1;
 
-        for (int i = 0; i < dices; i++) {
+        for (int i = 0; i < dices + modifier; i++) {
             randomRoll = (int) Math.floor(Math.random() * (type - min + 1) + min);
-            results.add(randomRoll);
+            hitResults.add(randomRoll);
         }
-        return results;
+        return hitResults;
     }
 
     // Summarise all rolls and add modifier
