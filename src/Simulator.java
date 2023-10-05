@@ -1,105 +1,174 @@
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Simulator {
+    public static int attackNoRoll(int attackDice, int attackDiceType, int attackNoMod) {
+        int randomRoll;
+        int min = 1;
+        ArrayList<Integer> attackNoRollResults = new ArrayList<>();
+
+        for (int i = 0; i < attackDice; i++) {
+            randomRoll = (int) Math.floor(Math.random() * (attackDiceType - min + 1) + min);
+            attackNoRollResults.add(randomRoll);
+        }
+        System.out.println("Let's see how many attacks attacker will be making. Here's the dice roll: " + attackNoRollResults);
+
+        int attackNo = 0;
+        for (Integer roll : attackNoRollResults) {
+            attackNo += roll;
+        }
+
+        return attackNo + attackNoMod;
+    }
+
+    public static int hitRoll(int numberOfAttacks, int weaponSkill) {
+        System.out.println("Attacker will be making a total of " + numberOfAttacks + " attacks.");
+        int randomRoll;
+        int min = 1;
+        int max = 6;
+        ArrayList<Integer> hitRollResults = new ArrayList<>();
+
+        for (int i = 0; i < numberOfAttacks; i++) {
+            randomRoll = (int) Math.floor(Math.random() * (max - min + 1) + min);
+            hitRollResults.add(randomRoll);
+        }
+        System.out.println("Attacker hits on " + weaponSkill + "+ and here's the hit roll: " + hitRollResults);
+
+        hitRollResults.removeIf(roll -> roll < weaponSkill);
+        int hitNo = hitRollResults.size();
+        System.out.println("Attacker makes " + hitNo + " successful hits.");
+        return hitNo;
+    }
+
+    public static int woundRoll(int numberOfHits, int woundTarget) {
+        int randomRoll;
+        int min = 1;
+        int max = 6;
+        ArrayList<Integer> woundRollResults = new ArrayList<>();
+
+        for (int i = 0; i < numberOfHits; i++) {
+            randomRoll = (int) Math.floor(Math.random() * (max - min + 1) + min);
+            woundRollResults.add(randomRoll);
+        }
+        System.out.println("Attacker wounds on " + woundTarget + "+ and here's the wound roll: " + woundRollResults);
+
+        woundRollResults.removeIf(roll -> roll < woundTarget);
+        int woundNo = woundRollResults.size();
+        System.out.println("Attacker makes " + woundNo + " successful wounds.");
+        return woundNo;
+    }
+
+    public static void saveRoll(int numberOfWounds, int saveTarget, int damage, int wounds) {
+        int randomRoll;
+        int min = 1;
+        int max = 6;
+        ArrayList<Integer> saveRollResults = new ArrayList<>();
+
+        for (int i = 0; i < numberOfWounds; i++) {
+            randomRoll = (int) Math.floor(Math.random() * (max - min + 1) + min);
+            saveRollResults.add(randomRoll);
+        }
+        System.out.println("Defender saves on " + saveTarget + "+ and here's the save roll: " + saveRollResults);
+
+        saveRollResults.removeIf(roll -> roll >= saveTarget);
+        int saveNo = saveRollResults.size();
+        if (saveNo < 1) {
+            System.out.println("Defender saved all of the wounds.");
+        } else if (saveNo == 1) {
+            System.out.println("Defender didn't save " + saveNo + " wound.");
+        } else {
+            System.out.println("Defender didn't save " + saveNo + " wounds.");
+        }
+
+        int damageTaken = saveNo * damage;
+        if (damageTaken >= wounds) {
+            System.out.println("Defender has taken " + damageTaken + " damage and is dead.");
+        } else if (damageTaken == 0) {
+            System.out.println("Defender has taken " + wounds + " wounds remaining.");
+        } else {
+            System.out.println("Defender has taken " + damageTaken + " damage and they have " + (wounds - damageTaken) + " wounds remaining.");
+        }
+    }
+
     public static void main(String[] args) {
         // Get attacker profile from user
         Scanner myObj1 = new Scanner(System.in);
-        System.out.println("Please provide the following values for the attacker: A, type of dice, modifiers, BS/WS, S, AP and D.");
+        System.out.println("Please provide the following values for the attacker: attacks, weapon skill, strength, armour penetration, damage.");
         String input1 = myObj1.nextLine();
+
+        // Get attacker variables from input1
+        String[] split1 = input1.split(" ");
+        String attackerA = split1[0];
+        String attackerWS = split1[1];
+        String attackerS = split1[2];
+        String attackerAP = split1[3];
+        String attackerD = split1[4];
+        int weaponSkill = Integer.parseInt(attackerWS);
+        int strength = Integer.parseInt(attackerS);
+        int armourPenetration = Integer.parseInt(attackerAP);
+        int damage = Integer.parseInt(attackerD);
 
         // Get defender profile from user
         Scanner myObj2 = new Scanner(System.in);
-        System.out.println("Please provide the following values for the defender: T, SV, invSV and W.");
+        System.out.println("Please provide the following values for the defender: toughness, save, invulnerable save, wounds.");
         String input2 = myObj2.nextLine();
 
-        // Split input
-        String[] split1 = input1.split(" ");
-        String[] split2 = input2.split(" ");
-
-        // Get attacker variables from input1
-        String attacks = split1[0];
-        String diceType = split1[1];
-        String modifier = split1[2];
-        String weaponSkill = split1[3];
-        String strength = split1[4];
-        String armourPenetration = split1[5];
-        String damage = split1[6];
-
         // Get defender variables from input2
-        String toughness = split2[0];
-        String save = split2[1];
-        String invulnerableSave = split2[2];
-        String wounds = split2[3];
+        String[] split2 = input2.split(" ");
+        String defenderT = split2[0];
+        String defenderSv = split2[1];
+        String defenderInvSv = split2[2];
+        String defenderW = split2[3];
+        int toughness = Integer.parseInt(defenderT);
+        int save = Integer.parseInt(defenderSv);
+        int invSave = Integer.parseInt(defenderInvSv);
+        int wounds = Integer.parseInt(defenderW);
 
-        // String to int conversion
-        int a = Integer.parseInt(attacks);
-        int type = Integer.parseInt(diceType);
-        int mod = Integer.parseInt(modifier);
-        int wS = Integer.parseInt(weaponSkill);
-        int s = Integer.parseInt(strength);
-        int aP = Integer.parseInt(armourPenetration);
-        int d = Integer.parseInt(damage);
+        // Get number of attacks from input
+        int attackDice;
+        int attackDiceType;
+        int attackNoMod;
+        int numberOfAttacks;
+        if (attackerA.length() == 1) {
+            numberOfAttacks = Integer.parseInt(attackerA);
+        } else {
+            String[] split3 = attackerA.split("d");
+            String diceNo = split3[0];
+            String restOfAttacks = split3[1];
+            String[] split4 = restOfAttacks.split("\\+");
+            String diceType = split4[0];
+            String modifier = split4[1];
+            attackDice = Integer.parseInt(diceNo);
+            attackDiceType = Integer.parseInt(diceType);
+            attackNoMod = Integer.parseInt(modifier);
+            numberOfAttacks = attackNoRoll(attackDice, attackDiceType, attackNoMod);
+        }
 
-        int t = Integer.parseInt(toughness);
-        int sv = Integer.parseInt(save);
-        int invSv = Integer.parseInt(invulnerableSave);
-        int w = Integer.parseInt(wounds);
-
-        // Print attacker's profile
-        System.out.println("You are making " + a + " attacks using d" + type + " dice, with an attack number modifier of " + mod + ".");
-
-       /* // Print defender's profile
-        System.out.println("Your defense stats: toughness " + t + ", save " + sv + "+, invulnerable save " + invSv + "+, wounds " + w);*/
-
-        // Hit roll
-        DiceRoller hitRoll = new DiceRoller(a, type, mod);
-        ArrayList<Integer> hitResults = hitRoll.roll();
-        // Print dice rolls
-        System.out.println("You hit on " + wS + "+ and here's what you rolled: " + hitResults);
-
-        // Wound roll
-        hitResults.removeIf(roll -> roll < wS);
-        int woundDice = hitResults.size();
-        int woundMod = 0;
+        // Calculate on what attacker wounds
         int woundTarget;
-
-        if (s == t) {
+        if (strength == toughness) {
             woundTarget = 4;
-        } else if (s > t && s < t * 2) {
+        } else if (strength > toughness && strength < toughness * 2) {
             woundTarget = 3;
-        } else if (s >= t * 2) {
+        } else if (strength >= toughness * 2) {
             woundTarget = 2;
-        } else if (s < t && s > t / 2) {
+        } else if (strength < toughness && strength > toughness / 2) {
             woundTarget = 5;
         } else {
             woundTarget = 6;
         }
 
-        DiceRoller woundRoll = new DiceRoller(woundDice, type, woundMod);
-        ArrayList<Integer> woundResults = woundRoll.roll();
-        // Print dice rolls
-        System.out.println("You wound on " + woundTarget + "+ and here's what you rolled: " + woundResults);
-
-        // Save roll
-        woundResults.removeIf(roll -> roll < woundTarget);
-        int saveDice = woundResults.size();
-        int saveMod = 0;
-        int saveTarget = Math.min(sv + aP, invSv);
-
-        DiceRoller saveRoll = new DiceRoller(saveDice, type, saveMod);
-        ArrayList<Integer> saveResults = saveRoll.roll();
-        // Print dice rolls
-        System.out.println("You save on " + saveTarget + "+ and here's what you rolled: " + saveResults);
-
-        // Allocate damage
-        saveResults.removeIf(roll -> roll >= saveTarget);
-        int damageTaken = saveResults.size() * d;
-
-        if (damageTaken >= w) {
-            System.out.println("You have taken " + damageTaken + " damage and your unit is dead.");
+        // Calculate on what defender saves
+        int saveTarget;
+        if (invSave == 0) {
+            saveTarget = save + armourPenetration;
         } else {
-            System.out.println("You have taken " + damageTaken + " damage and you have " + (w - damageTaken) + " wounds remaining.");
+            saveTarget = Math.min(save + armourPenetration, invSave);
         }
+
+        // Run functions
+        int numberOfHits = hitRoll(numberOfAttacks, weaponSkill);
+        int numberOfWounds = woundRoll(numberOfHits, woundTarget);
+        saveRoll(numberOfWounds, saveTarget, damage, wounds);
     }
 }
