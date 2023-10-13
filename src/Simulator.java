@@ -29,25 +29,23 @@ public class Simulator {
     }
 
     public ArrayList<Integer> simulate(Attacker attack, Defender defend, int repetitions) {
-        // Calculate on what attacker wounds
-        int strength = attack.strength;
-        int armourPenetration = attack.armourPenetration;
+
         int numberOfAttacks = attack.numberOfAttacks;
         int weaponSkill = attack.weaponSkill;
+        int strength = attack.strength;
+        int armourPenetration = attack.armourPenetration;
         int damage = attack.damage;
 
         int toughness = defend.toughness;
-        int invSave = defend.invSave;
         int save = defend.save;
+        int invSave = defend.invSave;
         int wounds = defend.wounds;
 
         int woundTarget = strengthToughnessThreshold(strength, toughness);
-
         int saveTarget = saveThreshold(invSave, save, armourPenetration);
 
         ArrayList<Integer> allDamage = new ArrayList<>();
-        // Run functions
-        for (int i=0; i<repetitions; i++) {
+        for (int i = 0; i < repetitions; i++) {
             RollResults hitRoll = DiceRoller.roll(numberOfAttacks).getAbove(weaponSkill);
             RollResults woundRoll = DiceRoller.roll(hitRoll.size()).getAbove(woundTarget);
             RollResults failedSaves = DiceRoller.roll(woundRoll.size()).getBelow(saveTarget);

@@ -4,21 +4,19 @@ public class UserInput {
     String input1;
     String input2;
 
-    public Attacker attacker;
+    public Attacker attacker; //Dlaczego nie moze byc to nizej?
     public Defender defender;
 
     public UserInput() {
-
-        // Get attacker profile from user
         Scanner myObj1 = new Scanner(System.in);
-        System.out.println("Please provide the following values for the attacker: attacks, weapon skill, strength, armour penetration, damage.");
+        System.out.println("Please provide the following values for the attacker: attacks, weapon skill, strength, " +
+                "armour penetration, damage.");
         input1 = myObj1.nextLine();
 
-        // Get defender profile from user
-        System.out.println("Please provide the following values for the defender: toughness, save, invulnerable save, wounds.");
+        System.out.println("Please provide the following values for the defender: toughness, save, invulnerable save," +
+                " wounds.");
         input2 = myObj1.nextLine();
 
-        // Get attacker variables from input1
         String[] split1 = input1.split(" ");
         String attackerA = split1[0];
         String attackerWS = split1[1];
@@ -30,7 +28,6 @@ public class UserInput {
         int armourPenetration = Integer.parseInt(attackerAP);
         int damage = Integer.parseInt(attackerD);
 
-        // Get defender variables from input2
         String[] split2 = input2.split(" ");
         String defenderT = split2[0];
         String defenderSv = split2[1];
@@ -41,10 +38,9 @@ public class UserInput {
         int invSave = Integer.parseInt(defenderInvSv);
         int wounds = Integer.parseInt(defenderW);
 
-        // Get number of attacks from input
         int attackDice;
         int attackDiceType;
-        int attackNoMod;
+        int attackMod;
         int numberOfAttacks;
         if (attackerA.length() == 1) {
             numberOfAttacks = Integer.parseInt(attackerA);
@@ -57,8 +53,8 @@ public class UserInput {
             String modifier = split4[1];
             attackDice = Integer.parseInt(diceNo);
             attackDiceType = Integer.parseInt(diceType);
-            attackNoMod = Integer.parseInt(modifier);
-            numberOfAttacks = DiceRoller.attackNoRoll(attackDice, attackDiceType, attackNoMod);
+            attackMod = Integer.parseInt(modifier);
+            numberOfAttacks = DiceRoller.attackNoRoll(attackDice, attackDiceType, attackMod);
         }
         this.attacker = new Attacker(weaponSkill, strength, armourPenetration, damage, numberOfAttacks);
         this.defender = new Defender(toughness, save, invSave, wounds);
